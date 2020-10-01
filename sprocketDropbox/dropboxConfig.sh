@@ -21,6 +21,7 @@ echo "[+] Starting SSH"
 systemctl start ssh
 systemctl enable ssh
 echo "[+] Updating Kali and tools"
+apt install openvpn -y
 apt update -y
 apt upgrade -y
 nmap --script-updatedb
@@ -34,7 +35,7 @@ echo "Enter the IP of the remote OpenVPN Server (CNC)> "
 read cncServer
 echo '#!/bin/bash' > /root/phonehome.sh
 echo "createTunnel() {" >> /root/phonehome.sh
-echo "    /usr/bin/ssh -o \"StrictHostKeyChecking=no\" -i /root/.ssh/callback -N -R 2222:localhost:22 callback@$cncServer" >> /root/phonehome.sh
+echo "    /usr/bin/ssh -o \"StrictHostKeyChecking=no\" -o \"StreamLocalBindUnlink=yes\" -i /root/.ssh/callback -N -R 2222:localhost:22 callback@$cncServer" >> /root/phonehome.sh
 echo '    if [[ $? -eq 0 ]]; then' >> /root/phonehome.sh
 echo "        echo \"Tunnel to jumpbox created successfully\"" >> /root/phonehome.sh
 echo "    else" >> /root/phonehome.sh
